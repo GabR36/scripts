@@ -18,7 +18,7 @@ dir="/home/gabriel/Área de trabalho/itr2021-2022-diferença"
 
 echo "nirf     | nome" >>  "$final"
 echo "---------+----------------------------" >> "$final"
-for arquivo in /home/gabriel/Área\ de\ trabalho/itr2021-2022-diferença/*; do
+for arquivo in "$dir"/*; do
     nirf="$(echo $arquivo | awk -F "/" '{print $6}')"
     xml="$arquivo/$nirf.xml"
     nome="$(awk -v RS="[><]" '{print}' "$xml" | sed -E -n '/^copiaIdentificador/s/^.*[ ]nomeContribuinte="([^"]+)".*$/\1/p')"
