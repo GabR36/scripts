@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# data: 19/10/2022
+
+# processa diretorio de dados do itr (contendo arquivos xml das declarações) geradas pelo programa
+# e faz um arquivo de texto com o NIRF e NOME das declarações
+
+# script para aprendizado
+# usei para automatizar uma tarefa que consistia em pegar o nome das pessoas que tinham feito o
+# itr em 2021 no sindicato mas não fizeram em 2022
+
+# parâmetros
+# arquivo que vai receber os nomes e nirfs
+final="/home/gabriel/Área de trabalho/itr-xml.txt"
+# diretorio onde estão os arquivos para se buscar a informação
+dir="/home/gabriel/Área de trabalho/itr2021-2022-diferença"
+
+
+echo "nirf     | nome" >>  "$final"
+echo "---------+----------------------------" >> "$final"
+for arquivo in /home/gabriel/Área\ de\ trabalho/itr2021-2022-diferença/*; do
+    nirf="$(echo $arquivo | awk -F "/" '{print $6}')"
+    xml="$arquivo/$nirf.xml"
+    nome="$(awk -v RS="[><]" '{print}' "$xml" | sed -E -n '/^copiaIdentificador/s/^.*[ ]nomeContribuinte="([^"]+)".*$/\1/p')"
+    echo "$nirf | $nome" >> "$final"
+done
